@@ -6,33 +6,58 @@ import RatingSelect from "./RatingSelect";
 import { useEffect } from "react";
 
 const FeedbackForm = (props) => {
-  const { handleAdd, feedbackEdit, handleUpdate } = props;
+  const { handleAdd, feedbackEdit, handleUpdate, cancelEditFeedback } = props;
 
   const [text, setText] = useState("");
   const [rating, setRating] = useState(10);
+  const [btnDisabled, setBtnDisabled] = useState(true);
 
   useEffect(() => {
     if (feedbackEdit.isEdit === true) {
       setText(feedbackEdit.item.text);
       setRating(feedbackEdit.item.rating);
+      setBtnDisabled(false);
     }
   }, [feedbackEdit]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newFeedback = {
-      id: uuidv4(),
-      rating,
-      text,
-    };
+  const handleTextChange = (e) => {
+    const newText = e.target.value.trim();
 
-    if (feedbackEdit.isEdit === true) {
-      handleUpdate(feedbackEdit.item.id, newFeedback);
-      feedbackEdit.isEdit = false;
+    if (newText.length === "") {
+      setBtnDisabled(true);
+    } else if (newText.length < 10) {
+      setBtnDisabled(true);
     } else {
-      handleAdd(newFeedback);
+      setBtnDisabled(false);
     }
 
+    setText(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (text.length >= 10) {
+      const newFeedback = {
+        id: uuidv4(),
+        rating,
+        text,
+      };
+
+      if (feedbackEdit.isEdit === true) {
+        handleUpdate(feedbackEdit.item.id, newFeedback);
+        feedbackEdit.isEdit = false;
+      } else {
+        handleAdd(newFeedback);
+      }
+
+      setText("");
+      setBtnDisabled(true);
+    }
+  };
+
+  const handleCancel = () => {
+    cancelEditFeedback();
     setText("");
   };
 
@@ -46,9 +71,16 @@ const FeedbackForm = (props) => {
             type="text"
             value={text}
             placeholder="Write a review"
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleTextChange}
           />
-          <Button type="submit">Send</Button>
+          <Button type="submit" isDisabled={btnDisabled}>
+            {feedbackEdit.isEdit ? "Update" : "Send"}
+          </Button>
+          {feedbackEdit.isEdit && (
+            <Button version="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
     </Card>

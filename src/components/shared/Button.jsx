@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Button = ({ children, version, type, isDisabled, ...buttonProps }) => {
+const Button = ({ children, version, isDisabled, type, ...buttonProps }) => {
   return (
     <button
       type={type}

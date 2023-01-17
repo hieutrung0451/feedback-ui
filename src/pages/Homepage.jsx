@@ -37,12 +37,17 @@ const Homepage = () => {
     });
   };
 
+  const cancelEditFeedback = () => {
+    setFeedbackEdit({ items: {}, isEdit: false });
+  };
+
   return (
     <div>
       <FeedbackForm
         handleAdd={addFeedback}
         feedbackEdit={feedbackEdit}
         handleUpdate={updateFeedback}
+        cancelEditFeedback={cancelEditFeedback}
       />
       <FeedbackStats feedbacks={feedbacks} />
       <FeedbackList
