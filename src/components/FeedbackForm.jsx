@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Card from "./shared/Card";
 import Button from "./shared/Button";
 import RatingSelect from "./RatingSelect";
-import { useEffect } from "react";
+import FeedbackContext from "../context/FeedbackContext";
 
-const FeedbackForm = (props) => {
-  const { handleAdd, feedbackEdit, handleUpdate, cancelEditFeedback } = props;
+const FeedbackForm = () => {
+  const { addFeedback, feedbackEdit, updateFeedback, cancelEditFeedback } =
+    useContext(FeedbackContext);
 
   const [text, setText] = useState("");
   const [rating, setRating] = useState(10);
@@ -49,10 +50,10 @@ const FeedbackForm = (props) => {
       };
 
       if (feedbackEdit.isEdit === true) {
-        handleUpdate(feedbackEdit.item.id, newFeedback);
+        updateFeedback(feedbackEdit.item.id, newFeedback);
         feedbackEdit.isEdit = false;
       } else {
-        handleAdd(newFeedback);
+        addFeedback(newFeedback);
       }
 
       setText("");

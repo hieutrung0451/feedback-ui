@@ -1,21 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import FeedbackItem from "./FeedbackItem";
+import FeedbackContext from "../context/FeedbackContext";
 
-const FeedbackList = (props) => {
-  const { feedbacks, deleteFeedback, editFeedback } = props;
+const FeedbackList = () => {
+  const { feedbacks } = useContext(FeedbackContext);
 
   return (
     <div className="feedback-list">
       {feedbacks.map((item) => (
-        <FeedbackItem
-          key={item.id}
-          feedback={item}
-          id={item.id}
-          rating={item.rating}
-          text={item.text}
-          handleDelete={deleteFeedback}
-          handleEdit={editFeedback}
-        />
+        <FeedbackItem key={item.id} item={item} />
       ))}
     </div>
   );
